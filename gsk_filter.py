@@ -16,3 +16,8 @@ print('Filtering activities with doc id in previous query...')
 
 res = activity.filter(document_chembl_id__in=doc_list)
 print('Number of Bioactivity Search Results: '+str(len(res)))
+
+print(res[0])
+
+for i in res[0]:
+    print(i)
