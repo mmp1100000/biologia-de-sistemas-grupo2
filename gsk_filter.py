@@ -23,7 +23,7 @@ print('Number of Bioactivity Search Results: ' + str(len(res)))
 input()
 print(res[0])
 
-with open('interactions.json', 'w') as file:
+with open('interactions.txt', 'w') as file:
     for interaction in tqdm(res):
         file.write(interaction['target_chembl_id']+'\n')
 
