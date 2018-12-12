@@ -2,10 +2,22 @@ from pprint import pprint
 
 from Bio import Entrez
 
-handle = Entrez.efetch(db="protein", id="P42681", retmode="xml")
-#records = Entrez.parse(handle)
-print(str(Entrez.read(handle)[0]['GBSeq_source-db']))['GeneID':]
-#for record in records:
-#    pprint(record['GBSeq_source-db'])
-handle.close()
 
+def get_gene_id(id_string):
+    """
+    Given a string of ids separated by commas, returns its gene IDs as a list.
+    :param id_string:
+    :return:
+    """
+    gene_id_list = list()
+    handle = Entrez.efetch(db="protein", id=id_string, retmode="xml")
+    for record in Entrez.read(handle):
+        entr = record['GBSeq_source-db']
+        gene_id_raw = entr[entr.find('GeneID'):]
+        gene_id = int(gene_id_raw[gene_id_raw.find(':') + 1:gene_id_raw.find(',')])
+        gene_id_list.append(gene_id)
+    handle.close()
+    return gene_id_list
+
+
+get_gene_id('P42681')
