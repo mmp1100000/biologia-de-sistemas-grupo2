@@ -13,9 +13,10 @@ def get_accession_from_activity(activity):
 
 def chembl_id_to_accession_id(chembl_file):
     """
-    Returns a dictionary of chembl_id:accession:id pairs
-    :param chembl_file:
-    :return:
+    Returns a dictionary of chembl_id:accession_id pairs, given the name of the interactions file
+    @TODO FIND OUT WHY SOME ACCESSION IDS CAN'T BE FOUND
+    :param chembl_file: interactions file
+    :return: dict
     """
     activities = new_client.target
     accession_ids = dict()
@@ -31,13 +32,13 @@ def chembl_id_to_accession_id(chembl_file):
 
 
 accession_dict = chembl_id_to_accession_id('interactions_sorted.txt')
-accession_list = [x for x in list(accession_dict.values()) if x is not None]
+accession_list = [x for x in list(accession_dict.values()) if x is not None] # Remove None values
 
-gene_list = get_gene_id(','.join(accession_list))
+gene_list = get_gene_id(','.join(accession_list)) # Join the accession list into a single string
 
-tsv_genes = get_tsv_gene_ids()
+tsv_genes = get_tsv_gene_ids() # Get gene ids from tsv
 
-for found_gene in gene_list:
+for found_gene in gene_list: # Compare found genes with tsv genes
     if found_gene in tsv_genes:
         print(found_gene)
 
