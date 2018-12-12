@@ -5,6 +5,10 @@ tsvdict = dict()
 
 
 def get_tsv_gene_ids():
+    """
+    Obtain breast neoplasm genes from journal tsv
+    :return: gene list
+    """
     with open(tsvname, mode='r') as tsvfile:
         is_key = False
         for line in tsvfile:

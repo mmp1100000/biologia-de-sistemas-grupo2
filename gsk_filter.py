@@ -27,12 +27,6 @@ with open('interactions.txt', 'w') as file:
     for interaction in tqdm(res):
         file.write(interaction['target_chembl_id']+'\n')
 
-# chembl_target_ids = set()
-
-# for interaction in tqdm(res):
-#    chembl_target_ids.add(interaction['target_chembl_id'])
-
-# print(chembl_target_ids)
 
 activities = new_client.target
 res2 = activities.filter(target_chembl_id="CHEMBL4367",

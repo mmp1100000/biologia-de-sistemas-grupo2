@@ -6,7 +6,7 @@ from conda._vendor.tqdm import tqdm
 
 def get_gene_id(id_string):
     """
-    Given a string of ids separated by commas, returns its gene IDs as a list.
+    Given a string of accession ids separated by commas, returns its gene IDs as a list.
     :param id_string:
     :return:
     """
