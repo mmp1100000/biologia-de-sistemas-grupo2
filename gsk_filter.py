@@ -37,6 +37,3 @@ with open('interactions.txt', 'w') as file:
 activities = new_client.target
 res2 = activities.filter(target_chembl_id="CHEMBL4367",
                          pchembl_value__isnull=False)
-
-for e in res2:
-    print(e)
