@@ -32,13 +32,12 @@ def chembl_id_to_accession_id(chembl_file):
 
 
 accession_dict = chembl_id_to_accession_id('interactions_sorted.txt')
-accession_list = [x for x in list(accession_dict.values()) if x is not None] # Remove None values
+accession_list = [x for x in list(accession_dict.values()) if x is not None]  # Remove None values
 
-gene_list = get_gene_id(','.join(accession_list)) # Join the accession list into a single string
+gene_list = get_gene_id(','.join(accession_list))  # Join the accession list into a single string
 
-tsv_genes = get_tsv_gene_ids() # Get gene ids from tsv
+tsv_genes = get_tsv_gene_ids()  # Get gene ids from tsv
 
-for found_gene in gene_list: # Compare found genes with tsv genes
+for found_gene in gene_list:  # Compare found genes with tsv genes
     if found_gene in tsv_genes:
         print(found_gene)
-
