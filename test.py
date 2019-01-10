@@ -1,7 +1,7 @@
 import json
 from pprint import pprint
 
-from conda._vendor.tqdm import tqdm
+from tqdm import tqdm
 
 from chembl_webresource_client.new_client import new_client
 
