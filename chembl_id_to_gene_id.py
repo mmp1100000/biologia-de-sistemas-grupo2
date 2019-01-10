@@ -1,6 +1,6 @@
 from pprint import pprint
 
-from conda._vendor.tqdm import tqdm
+from tqdm import tqdm
 
 from chembl_webresource_client.new_client import new_client
 from drug_gene import get_tsv_gene_ids

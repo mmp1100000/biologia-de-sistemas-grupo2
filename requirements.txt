@@ -1,0 +1,3 @@
+chembl_webresource_client
+tqdm
+biopython
