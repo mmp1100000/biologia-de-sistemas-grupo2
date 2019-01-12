@@ -6,6 +6,7 @@ from chembl_webresource_client.new_client import new_client
 from drug_gene import get_tsv_gene_ids
 from protein_entrez import get_gene_id
 
+chembl_file = 'interactions.txt'
 
 def get_accession_from_activity(activity):
     return activity[0]['target_components'][0]['accession']
@@ -20,8 +21,9 @@ def chembl_id_to_accession_id(chembl_file):
     """
     activities = new_client.target
     accession_ids = dict()
-    with open(chembl_file, 'r') as chembl_file_id:
-        for line in tqdm(chembl_file_id):
+    with open(chembl_file, 'r') as file:
+        for line in tqdm(file):
+            chembl_id = line.split('\t')[1]
             try:
                 res2 = activities.filter(target_chembl_id=[line.strip()],
                                          pchembl_value__isnull=False)
@@ -31,7 +33,7 @@ def chembl_id_to_accession_id(chembl_file):
     return accession_ids
 
 
-accession_dict = chembl_id_to_accession_id('interactions_sorted.txt')
+accession_dict = chembl_id_to_accession_id(chembl_file)
 accession_list = [x for x in list(accession_dict.values()) if x is not None]  # Remove None values
 
 gene_list = get_gene_id(','.join(accession_list))  # Join the accession list into a single string

@@ -1,6 +1,6 @@
 import re
 
-tsvname = 'journal.pcbi.1004120.s004.TSV'
+tsvname = '../data/journal.pcbi.1004120.s004.TSV'
 tsvdict = dict()
 
 
