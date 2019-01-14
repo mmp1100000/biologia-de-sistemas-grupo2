@@ -1,7 +1,7 @@
 from pprint import pprint
 
 from Bio import Entrez
-from conda._vendor.tqdm import tqdm
+from tqdm import tqdm
 
 
 def get_gene_id(id_string):
