@@ -4,6 +4,7 @@ import sys
 from tqdm import tqdm
 from chembl_webresource_client.new_client import new_client
 
+
 def printerr(line):
         sys.stderr.write(u'%s\n' % line)
 
