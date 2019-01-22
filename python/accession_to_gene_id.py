@@ -1,9 +1,9 @@
 from Bio import Entrez
-import fileinput
-
 from tqdm import tqdm
 from utils import suppress_stderr
+import fileinput
 
+Entrez.email = 'sosa@uma.es'
 
 def get_gene_id(id_string):
     """
