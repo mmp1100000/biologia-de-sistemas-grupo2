@@ -10,10 +10,9 @@ def get_gene_id(id_string):
     :param id_string:
     :return:
     """
+
     gene_id_list = list()
-    print("hola")
     handle = Entrez.efetch(db="protein", id=id_string, retmode="xml")
-    print("adios")
     for record in tqdm(Entrez.read(handle)):
         try:
             entr = record['GBSeq_source-db']
