@@ -5,12 +5,12 @@ cd `dirname $0`
 
 printinfo()
 {
-    echo "\e[36m\e[1m$1\e[0m"
+    echo -e "\e[36m\e[1m$1\e[0m"
 }
 
 printerror()
 {
-    echo "\e[31m\e[1m$1\e[0m"
+    echo -e "\e[31m\e[1m$1\e[0m"
 }
 
 skip_gsk_filter=false
