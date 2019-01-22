@@ -3,7 +3,9 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
 
-data = pd.read_csv('../outputs/interactions.tsv', sep="\t", header=None)
+carpeta = "pvalued_interactions_85"
+data = pd.read_csv('../outputs/pvalued_interactions_0.85.tsv', sep="\t", header=None)
+df_node = pd.read_csv('../outputs/pvalued_interactions_0.85.tsv', sep="\t", header=None)
 
 import warnings
 warnings.filterwarnings('ignore')
@@ -12,22 +14,19 @@ G = nx.Graph(day="Stackoverflow")
 
 veces = []
 veces1 = []
-for l in set(data[0].tolist()):
-    veces.append(data[0].tolist().count(l))
-
 for l in set(data[1].tolist()):
-    veces1.append(data[1].tolist().count(l))
+    veces.append(data[1].tolist().count(l))
 
-
-df_node = pd.read_csv('../outputs/interactions.tsv', sep="\t", header=None)
+for l in set(data[2].tolist()):
+    veces1.append(data[2].tolist().count(l))
 
 df_edges = pd.DataFrame({
-    'source': df_node[0].tolist(),
-    'target': df_node[1].tolist(),
-    'value': np.repeat(1, len(data[1].tolist()))
+    'source': df_node[1].tolist(),
+    'target': df_node[2].tolist(),
+    'value': np.repeat(2, len(data[2].tolist()))
 })
-elements = list(set(data[0])) + list(set(data[1]))
-groups = np.repeat(0, len(set(data[0].values)), axis=0).tolist() + np.repeat(1, len(set(data[1].values)), axis=0).tolist()
+elements = list(set(data[1])) + list(set(data[2]))
+groups = np.repeat(0, len(set(data[1].values)), axis=0).tolist() + np.repeat(1, len(set(data[2].values)), axis=0).tolist()
 df_nodes = pd.DataFrame({'name': elements ,
                         'group':  groups,
                          'nodesize': veces + veces1
@@ -41,7 +40,7 @@ for index, row in df_edges.iterrows():
 
 color_map = {0: '#f09494', 1: '#d2f5f0'}
 
-plt.figure(figsize=(50, 50))
+plt.figure(figsize=(10, 10))
 options = {
     'edge_color': '#FFDEA2',
     'width': 1,
@@ -66,34 +65,34 @@ default k=0.1 and iterations=50
 nx.draw(G, node_color=colors, node_size=sizes, pos=nx.spring_layout(G, k=0.25, iterations=50), **options)
 ax = plt.gca()
 ax.collections[0].set_edgecolor("#C0C0C0")
-plt.savefig("../outputs/NNETGraph/net-spring.png")
+plt.savefig("../outputs/NNETGraph/"+str(carpeta)+"/net-spring.png")
 
 nx.draw(G, node_color=colors, node_size=sizes, pos=nx.spectral_layout(G), **options)
 ax = plt.gca()
 ax.collections[0].set_edgecolor("#C0C0C0")
-plt.savefig("../outputs/NNETGraph/net-spectral.png")
+plt.savefig("../outputs/NNETGraph/"+str(carpeta)+"/net-spectral.png")
 
 nx.draw(G, node_color=colors, node_size=sizes, pos=nx.fruchterman_reingold_layout(G), **options)
 ax = plt.gca()
 ax.collections[0].set_edgecolor("#C0C0C0")
-plt.savefig("../outputs/NNETGraph/net-reingold.png")
+plt.savefig("../outputs/NNETGraph/"+str(carpeta)+"/net-reingold.png")
 
 nx.draw(G, node_color=colors, node_size=sizes, pos=nx.random_layout(G), **options)
 ax = plt.gca()
 ax.collections[0].set_edgecolor("#C0C0C0")
-plt.savefig("../outputs/NNETGraph/net-random.png")
+plt.savefig("../outputs/NNETGraph/"+str(carpeta)+"/net-random.png")
 
 nx.draw(G, node_color=colors, node_size=sizes, pos=nx.circular_layout(G), **options)
 ax = plt.gca()
 ax.collections[0].set_edgecolor("#C0C0C0")
-plt.savefig("../outputs/NNETGraph/net-circular.png")
+plt.savefig("../outputs/NNETGraph/"+str(carpeta)+"/net-circular.png")
 
 nx.draw(G, node_color=colors, node_size=sizes, pos=nx.shell_layout(G), **options)
 ax = plt.gca()
 ax.collections[0].set_edgecolor("#C0C0C0")
-plt.savefig("../outputs/NNETGraph/net-shell.png")
+plt.savefig("../outputs/NNETGraph/"+str(carpeta)+"/net-shell.png")
 
 nx.draw(G, node_color=colors, node_size=sizes, pos=nx.kamada_kawai_layout(G), **options)
 ax = plt.gca()
 ax.collections[0].set_edgecolor("#C0C0C0")
-plt.savefig("../outputs/NNETGraph/net-kawai.png")
+plt.savefig("../outputs/NNETGraph/"+str(carpeta)+"/net-kawai.png")
