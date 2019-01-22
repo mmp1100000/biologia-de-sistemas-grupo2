@@ -1,12 +1,11 @@
+from chembl_webresource_client.new_client import new_client
+from utils import printerr
+from tqdm import tqdm
 import sys
 
-from chembl_webresource_client.new_client import new_client
-from tqdm import tqdm
-
-
-def printerr(line):
-    sys.stderr.write(u'%s\n' % line)
-
+if (len(sys.argv) < 2):
+    exit("You must provide the minimum inhibition percentage at 1 micromol as argument.")
+min_inhibition_percentage = int(sys.argv[1])
 
 assay = new_client.assay
 
@@ -34,7 +33,7 @@ interactions = activity.filter(
     assay_type='B',
     relationship_type='D',
     assay_description__contains='at 1 uM',
-    value__gte=50).only(['target_chembl_id', 'molecule_chembl_id'])
+    value__gte=min_inhibition_percentage).only(['target_chembl_id', 'molecule_chembl_id'])
 
 printerr('Number of Bioactivity Search Results: ' + str(len(interactions)))
 
