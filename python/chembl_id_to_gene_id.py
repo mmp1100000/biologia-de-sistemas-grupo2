@@ -45,6 +45,7 @@ from protein_entrez import get_gene_id
 # pickle_out = open("list", "wb")
 # pickle.dump(accession_list, pickle_out)
 # pickle_out.close()
+from python.drug_gene import get_tsv_gene_ids
 from python.protein_entrez import get_gene_id
 
 file_list = open("list", "rb")
@@ -57,8 +58,8 @@ pickle_out = open("genes", "wb")
 pickle.dump(gene_list, pickle_out)
 pickle_out.close()
 
-# tsv_genes = get_tsv_gene_ids()  # Get gene ids from tsv
-#
-# for found_gene in gene_list:  # Compare found genes with tsv genes
-#     if found_gene in tsv_genes:
-#         print(found_gene)
+tsv_genes = get_tsv_gene_ids()  # Get gene ids from tsv
+
+for found_gene in gene_list:  # Compare found genes with tsv genes
+    if found_gene in tsv_genes:
+        print(found_gene)
