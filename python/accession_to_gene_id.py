@@ -2,7 +2,7 @@ from pprint import pprint
 
 from Bio import Entrez
 from tqdm import tqdm
-
+import sys, fileinput
 
 def get_gene_id(id_string):
     """
@@ -10,6 +10,7 @@ def get_gene_id(id_string):
     :param id_string:
     :return:
     """
+
     gene_id_list = list()
     handle = Entrez.efetch(db="protein", id=id_string, retmode="xml")
     for record in tqdm(Entrez.read(handle)):
@@ -23,3 +24,11 @@ def get_gene_id(id_string):
     handle.close()
     return gene_id_list
 
+
+ids = []
+
+for line in fileinput.input():
+    ids.append(line.strip())
+
+for gene_id in get_gene_id(",".join(ids)):
+    print(gene_id)
