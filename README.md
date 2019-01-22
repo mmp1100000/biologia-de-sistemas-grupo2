@@ -1,1 +1,5 @@
-biologia de sistemas-grupo2
+Biología de sistemas. Grupo 2.
+------------------------------
+
+**Workflow implementado.**
+![](workflow.png)
