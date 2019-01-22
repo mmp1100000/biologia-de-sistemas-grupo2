@@ -4,7 +4,7 @@ import fileinput
 from tqdm import tqdm
 from utils import suppress_stderr
 
-@suppress_stderr
+
 def get_gene_id(id_string):
     """
     Given a string of accession ids separated by commas, returns its gene IDs as a list.

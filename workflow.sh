@@ -17,6 +17,8 @@ skip_gsk_filter=false
 confidence_interval=0.95
 min_inhibition_percentage=50
 
+mkdir --parents outputs
+
 # Parse options
 while getopts ":c:i:s" opt; do
     case $opt in
@@ -62,3 +64,6 @@ outputs/breast_cancer_genes.tsv outputs/translated_interactions.tsv | sort -k 3 
 
 printinfo "Performing the overrepresentation statistical test."
 python python/binom.py outputs/flagged_interactions.tsv $confidence_interval
+
+printinfo "Generating graph."
+python python/graph.py outputs/pvalued_interactions_${confidence_interval}.tsv $confidence_interval
