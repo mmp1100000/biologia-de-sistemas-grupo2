@@ -17,7 +17,7 @@ skip_gsk_filter=false
 confidence_interval=0.95
 min_inhibition_percentage=50
 
-mkdir --parents outputs
+mkdir -p outputs
 
 # Parse options
 while getopts ":c:i:s" opt; do
