@@ -14,7 +14,7 @@ printerror()
 }
 
 skip_gsk_filter=false
-confidence_interval=95
+confidence_interval=0.95
 min_inhibition_percentage=50
 
 # Parse options

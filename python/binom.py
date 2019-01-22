@@ -6,7 +6,7 @@ import sys
 if (len(sys.argv) < 3):
     exit("You must provide the flagged interactions file and the confidence interval percentage as argument.")
 inputfile = sys.argv[1]
-conf_level = float(sys.argv[2]) / 100
+conf_level = float(sys.argv[2])
 
 
 @suppress_stderr
@@ -31,6 +31,8 @@ def binomial(fichero, conf_level):
 
 
 res = binomial(fichero=inputfile, conf_level=conf_level)
-printerr(str(len(list(set(res[res["p_value"].values < 0.05][0])))) + " out of " + str(
-    len(list(set(res[0])))) + " drugs allow us to reject the null hypothesis with a confidence interval of " + str(
-    conf_level) + ".")
+printerr(str(len(set(res[res["p_value"].values < 0.05][0]))) + " out of " + str(
+    len(list(set(res[0])))) + " compounds allow us to reject the null hypothesis with a confidence interval of " + str(
+    conf_level) + ":")
+for compound in set(res[res["p_value"].values < 0.05][0]):
+    print(compound)
