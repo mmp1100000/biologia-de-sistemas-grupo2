@@ -1,6 +1,8 @@
 chembl_webresource_client
-tqdm
 biopython
 pandas
 matplotlib
 networkx
+scipy
+tqdm
+numpy
