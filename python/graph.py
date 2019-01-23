@@ -6,6 +6,8 @@ import pandas as pd
 import numpy as np
 import warnings
 
+from plotly.offline.offline import matplotlib
+
 if len(sys.argv) < 3:
     exit("pvalued_interactions tsv filepath and confidence interval index required.")
 inputfile = sys.argv[1]
@@ -110,6 +112,66 @@ def nnet_graph(file, type, imageDim=20):
         plt.savefig("../outputs/net-random.png")
 
 
+def bipartite_graph(file):
+    # plot dimensions
+    matplotlib.rcParams['figure.figsize'] = [15, 20]  # for square canvas
+    matplotlib.rcParams['figure.subplot.left'] = 0
+    matplotlib.rcParams['figure.subplot.bottom'] = 0
+    matplotlib.rcParams['figure.subplot.right'] = 1
+    matplotlib.rcParams['figure.subplot.top'] = 1
+
+    # read flagged interactions: colums 0 and 1 as nodes, rows as interactions
+    data = pd.read_csv(file, sep="\t")
+    interactions = [tuple([row[1], row[2], row[4]]) for row in data.values.tolist() if row[3] == 1]
+    drug_pval = set([tuple([row[0], row[2]]) for row in interactions])
+    drug_pval = [row[1] for row in drug_pval]
+    drug_nodes = list(set([row[0] for row in interactions]))
+    gene_nodes = list(set([row[1] for row in interactions]))
+    interactions = [tuple([row[0], row[1]]) for row in interactions]
+    print(len(interactions))
+    print(len(drug_nodes))
+    print(len(gene_nodes))
+
+    # create bipartite graph
+    G = nx.Graph()
+    # Add nodes with the node attribute "bipartite"
+    G.add_nodes_from(drug_nodes, bipartite=0)
+    G.add_nodes_from(gene_nodes, bipartite=1)
+    # Add edges only between nodes of opposite node sets
+    G.add_edges_from(interactions)
+    nx.is_connected(G)
+
+    # distribute node positions according to their bipartite 'class' 0-drugs, 1-genes
+    X, Y = nx.bipartite.sets(G)
+    pos = dict()
+    posX = dict()
+    posY = dict()
+    posX.update((n, (0, i * 10)) for i, n in enumerate(X))
+    posY.update((n, (0.5, i * 100)) for i, n in enumerate(Y))
+    pos.update((n, (0, i * 10)) for i, n in enumerate(X))
+    pos.update((n, (0.5, i * 100)) for i, n in enumerate(Y))
+
+    bipartite_colors = np.array(list(reversed(sorted(list(nx.bipartite.color(G).values()), key=int))))
+    print(bipartite_colors)
+
+    # draw in the positions
+    nx.draw(G, pos=pos, with_labels=True,
+            edge_color="Green",
+            edge_cmap=plt.get_cmap('Greens'),
+            node_color="Red",
+            cmap=plt.get_cmap('Reds'))
+
+    # nx.draw_networkx_nodes(X, pos=posX, with_labels=True, node_color=np.array(drug_pval), cmap=plt.get_cmap('Greens'))
+    # nx.draw_networkx_nodes(Y, pos=posY, with_labels=True, node_color="Blue")
+    # nx.draw_networkx_labels(G, pos=pos)
+    # nx.draw_networkx_edges(G, pos=pos)
+
+    plt.title('All breast-cancer-genes interactions with GSK drugs')
+    plt.savefig("../outputs/NNETGraph/bipartite.png")
+
+
 nnet_graph(inputfile, "kawai", imageDim=10)
+bipartite_graph(inputfile)
+
 # Si van a aparecer muchas conexiones, es mejor aumentar el tamaño de la ventana
 # nnet_graph("../outputs/pvalued_interactions_0.95.tsv", "kawai", imageDim = 50)
