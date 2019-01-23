@@ -28,8 +28,9 @@ def binomial(fichero, conf_level):
     for p in df[0]:
         resul.append(res_pval.get(p))
 
-    df = df.assign(p_value = pd.Series(resul).values)
-    df.to_csv("outputs/pvalued_interactions_"+str(conf_level)+".tsv", sep="\t",  encoding='utf-8')
+    df = df.assign(p_value=pd.Series(resul).values)
+    df = df.sort_values(by=['p_value'])
+    df.to_csv("outputs/pvalued_interactions_" + str(conf_level) + ".tsv", sep="\t", encoding='utf-8')
     return df
 
 

@@ -18,7 +18,8 @@ confidence_interval=0.95
 min_inhibition_percentage=50
 
 mkdir -p outputs
-
+mkdir -p data
+wget -nc http://www.plosone.org/article/fetchSingleRepresentation.action?uri=info:doi/10.1371/journal.pcbi.1004120.s004 -O data/journal.pcbi.1004120.s004.TSV
 # Parse options
 while getopts ":c:i:s" opt; do
     case $opt in
