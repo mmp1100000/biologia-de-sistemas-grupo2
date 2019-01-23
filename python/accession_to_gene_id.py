@@ -1,8 +1,10 @@
 from Bio import Entrez
-import fileinput
+from tqdm import tqdm
 from utils import suppress_stderr
+import fileinput
 
-@suppress_stderr
+Entrez.email = 'sosa@uma.es'
+
 def get_gene_id(id_string):
     """
     Given a string of accession ids separated by commas, returns its gene IDs as a list.
@@ -12,7 +14,7 @@ def get_gene_id(id_string):
 
     gene_id_list = list()
     handle = Entrez.efetch(db="protein", id=id_string, retmode="xml")
-    for record in Entrez.read(handle):
+    for record in tqdm(Entrez.read(handle)):
         entr = record['GBSeq_source-db']
         gene_id_raw = entr[entr.find('GeneID'):]
         gene_id = int(gene_id_raw[gene_id_raw.find(':') + 1:gene_id_raw.find(',')])
