@@ -32,7 +32,7 @@ interactions = activity.filter(
     document_chembl_id__in=doc_list,
     assay_type='B',
     relationship_type='D',
-    assay_description__contains='at 1 uM',
+    assay_description__contains='at 1 uM', # pchembl = -log(IC50) = -log(10^-7)=7
     value__gte=min_inhibition_percentage).only(['target_chembl_id', 'molecule_chembl_id'])
 
 printerr('Number of Bioactivity Search Results: ' + str(len(interactions)))
