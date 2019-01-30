@@ -14,12 +14,14 @@ conf_level = float(sys.argv[2])
 
 def nnet_graph(file, type, imageDim=20):
     data = pd.read_csv(file, sep="\t")
+    unique_drugs = set(data['0'])
+    total_number_of_tests = len(unique_drugs)
     df_node = pd.read_csv(file, sep="\t")
     data['p_value'] = pd.to_numeric(data['p_value'])
     df_node['p_value'] = pd.to_numeric(df_node['p_value'])
 
-    data = data[data['p_value'] < (1 - conf_level)]
-    df_node = df_node[df_node['p_value'] < (1 - conf_level)]
+    data = data[data['p_value'] < (1 - conf_level)/total_number_of_tests]
+    df_node = df_node[df_node['p_value'] < (1 - conf_level)/total_number_of_tests]
 
     warnings.filterwarnings('ignore')
 
@@ -41,12 +43,9 @@ def nnet_graph(file, type, imageDim=20):
     elements = list(set(data['0'])) + list(set(data['1']))
 
     #Aqui vamos a poner diferentes los colores
-    vectorDif = data.drop_duplicates('0', keep='last')
-    print(vectorDif)
-    print(list(vectorDif))
+    vectorDif = data.drop_duplicates('1', keep='last')
     colors_differ = vectorDif['2']
-    print(colors_differ.tolist())
-    groups = colors_differ.tolist() + np.repeat(2, len(set(data['1'].values)),axis=0).tolist()
+    groups = np.repeat(2, len(set(data['0'].values)),axis=0).tolist() + colors_differ.tolist()
     df_nodes = pd.DataFrame({'name': elements,
                              'group': groups,
                              'nodesize': veces + veces1
