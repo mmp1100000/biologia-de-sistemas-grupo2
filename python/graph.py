@@ -41,11 +41,12 @@ def nnet_graph(file, type, imageDim=20):
     elements = list(set(data['0'])) + list(set(data['1']))
 
     #Aqui vamos a poner diferentes los colores
-    vectorDif = data['0'].nunique()
+    vectorDif = data.drop_duplicates('0', keep='last')
+    print(vectorDif)
+    print(list(vectorDif))
     colors_differ = vectorDif['2']
-
-    groups = colors_differ + np.repeat(2, len(set(data['1'].values)),
-                                                                                   axis=0).tolist()
+    print(colors_differ.tolist())
+    groups = colors_differ.tolist() + np.repeat(2, len(set(data['1'].values)),axis=0).tolist()
     df_nodes = pd.DataFrame({'name': elements,
                              'group': groups,
                              'nodesize': veces + veces1
