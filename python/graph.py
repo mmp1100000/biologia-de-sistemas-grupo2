@@ -39,7 +39,12 @@ def nnet_graph(file, type, imageDim=20):
         'value': np.repeat(1, len(data['1'].tolist()))
     })
     elements = list(set(data['0'])) + list(set(data['1']))
-    groups = np.repeat(0, len(set(data['0'].values)), axis=0).tolist() + np.repeat(1, len(set(data['1'].values)),
+
+    #Aqui vamos a poner diferentes los colores
+    vectorDif = data['0'].nunique()
+    colors_differ = vectorDif['2']
+
+    groups = colors_differ + np.repeat(2, len(set(data['1'].values)),
                                                                                    axis=0).tolist()
     df_nodes = pd.DataFrame({'name': elements,
                              'group': groups,
@@ -51,7 +56,7 @@ def nnet_graph(file, type, imageDim=20):
     for index, row in df_edges.iterrows():
         G.add_weighted_edges_from([(row['source'], row['target'], row['value'])])
 
-    color_map = {0: '#f09494', 1: '#d2f5f0'}
+    color_map = {0: '#298A08', 1: '#0080FF', 2: '#DF0101'}
 
     plt.figure(figsize=(imageDim, imageDim))
     options = {
