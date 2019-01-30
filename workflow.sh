@@ -5,16 +5,16 @@ cd `dirname $0`
 
 printinfo()
 {
-    echo "\e[36m\e[1m$1\e[0m"
+    echo -e "\e[36m\e[1m$1\e[0m"
 }
 
 printerror()
 {
-    echo "\e[31m\e[1m$1\e[0m"
+    echo -e "\e[31m\e[1m$1\e[0m"
 }
 
 skip_gsk_filter=false
-confidence_interval=95
+confidence_interval=0.95
 min_inhibition_percentage=50
 
 mkdir -p outputs
@@ -64,3 +64,6 @@ outputs/breast_cancer_genes.tsv outputs/translated_interactions.tsv | sort -k 3 
 
 printinfo "Performing the overrepresentation statistical test."
 python python/binom.py outputs/flagged_interactions.tsv $confidence_interval
+
+printinfo "Generating graph."
+python python/graph.py outputs/pvalued_interactions_${confidence_interval}.tsv $confidence_interval
