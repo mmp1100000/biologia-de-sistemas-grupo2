@@ -43,6 +43,13 @@ while getopts ":c:i:s" opt; do
 done
 shift $(($OPTIND - 1))
 
+# Default disease
+if [ -z "$1" ]; then
+    disease="breast neoplasms"
+else
+    disease=$1
+fi
+
 if [ $skip_gsk_filter = false ]; then
     printinfo "Downloading unique interactions with minimum inhibition percentage of $min_inhibition_percentage%."
     python python/gsk_filter.py $min_inhibition_percentage | sort -u > outputs/interactions.tsv
@@ -55,11 +62,11 @@ if [ $skip_gsk_filter = false ]; then
     awk 'FNR==NR { a[$1]=$2; next } a[$1] { print $2"\t"a[$1] }' outputs/targets_chembl_geneid.tsv outputs/interactions.tsv > outputs/translated_interactions.tsv
 fi
 
-printinfo "Parsing known $1 genes."
-filename=`echo $1 | tr ' ' '_'`
-eval "grep '$1' < data/gene-disease.tsv | cut -f 2 | tr '/' '\n' > outputs/${filename}_genes.tsv"
+printinfo "Parsing known $disease genes."
+filename=`echo $disease | tr ' ' '_'`
+eval "grep '$disease' < data/gene-disease.tsv | cut -f 2 | tr '/' '\n' > outputs/${filename}_genes.tsv"
 
-printinfo "Checking off $1 gene interactions."
+printinfo "Checking off $disease gene interactions."
 awk 'FNR==NR { a[$0]; next } { if ($2 in a) { print $0"\t"1 } else { print $0"\t"0 } }' \
 outputs/${filename}_genes.tsv outputs/translated_interactions.tsv | sort -k 3 -r > outputs/flagged_interactions.tsv
 

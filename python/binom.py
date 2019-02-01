@@ -16,10 +16,18 @@ resul = []
 probability = number_assoc_genes / 20000 # all human proteins
 unique_drugs = set(df[0])
 
+breast_cancer = df[df[2] == 1]
+unique_genes = set(breast_cancer[1])
+printerr("Disease-assocciated genes interacting: ")
+printerr(unique_genes)
+
+unique_drugs_interacting = set(breast_cancer[0])
+printerr("Compounds interacting with disease-assocciated genes: " + str(len(unique_drugs_interacting)))
+
 for i in list(unique_drugs):
     df_moment = df[df[0] == i]
     trials = len(list(df_moment[1]))
-    success_rows = df_moment[df[2] == 1]
+    success_rows = df[(df[0] == i) & (df[2] == 1)]
     success = len(success_rows[1])
     p_value = stats.binom_test(success, n=trials, p=probability, alternative='greater')
     res_pval.update({str(i): p_value})
@@ -30,6 +38,7 @@ df = df.assign(p_value=pd.Series(resul).values)
 df = df.sort_values(by=['p_value'])
 df.to_csv("outputs/pvalued_interactions_" + sys.argv[2] + ".tsv", sep="\t", encoding='utf-8')
 printerr(str(len(set(df[df["p_value"].values < (1 - conf_level)/len(unique_drugs)][0]))) + " out of " + str(
-len(list(set(df[0])))) + " compounds allow us to reject the null hypothesis with a Bonferroni corrected p-value of: " + str((1 - conf_level)/len(unique_drugs)) + ":")
+len(list(set(df[0])))) + " compounds allow us to reject the null hypothesis with a Bonferroni corrected p-value of " + str((1 - conf_level)/len(unique_drugs)) + ":")
+
 for compound in set(df[df["p_value"].values < (1 - conf_level)/len(unique_drugs)][0]):
-    print(compound)
+    printerr(compound)

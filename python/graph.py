@@ -33,7 +33,7 @@ def nnet_graph(file, type, imageDim=20):
         veces.append(data['0'].tolist().count(l))
 
     for l in set(data['1'].tolist()):
-        veces1.append(data['1'].tolist().count(l))
+        veces1.append(data['1'].tolist().count(l) + 10)
 
     df_edges = pd.DataFrame({
         'source': df_node['0'].tolist(),
@@ -43,13 +43,16 @@ def nnet_graph(file, type, imageDim=20):
     elements = list(set(data['0'])) + list(set(data['1']))
 
     #Aqui vamos a poner diferentes los colores
-    vectorDif = data.drop_duplicates('1', keep='last')
+    vectorDif = data.sort_values('2', ascending=False).drop_duplicates('1', keep="first")
     colors_differ = vectorDif['2']
     groups = np.repeat(2, len(set(data['0'].values)),axis=0).tolist() + colors_differ.tolist()
+
+    elements = list(set(data['0'])) + list(vectorDif['1'])
     df_nodes = pd.DataFrame({'name': elements,
                              'group': groups,
                              'nodesize': veces + veces1
                              })
+    
     for index, row in df_nodes.iterrows():
         G.add_node(row['name'], group=row['group'], nodesize=row['nodesize'])
 
@@ -104,9 +107,15 @@ def nnet_graph(file, type, imageDim=20):
         ax.collections[0].set_edgecolor("#C0C0C0")
         plt.savefig("../outputs/net-shell.png")
     elif type == "kawai":
-        nx.draw(G, node_color=colors, node_size=sizes, pos=nx.kamada_kawai_layout(G), **options)
-        ax = plt.gca()
-        ax.collections[0].set_edgecolor("#C0C0C0")
+        pos_nodes = nx.spring_layout(G)
+        nx.draw(G, node_color=colors, node_size=sizes, pos=pos_nodes, **options)
+        node_attrs = nx.get_node_attributes(G, 'name')
+        pos_attrs = {}
+        
+        for node, coords in pos_nodes.items():
+            pos_attrs[node] = (coords[0], coords[1] + 0.08)
+        
+        nx.draw_networkx_labels(G, pos_attrs, labels=node_attrs)
         plt.savefig("outputs/net-kawai.png")
     else:
         nx.draw(G, node_color=colors, node_size=sizes, pos=nx.random_layout(G), **options)
