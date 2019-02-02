@@ -1,7 +1,7 @@
 import fileinput
 import re
 
-
+# Este script solo añade ciertas modificaciones al gene dataset
 for line in fileinput.input():
     if fileinput.isfirstline():
         continue

@@ -1,5 +1,7 @@
 import sys, os
 
+# Aquí tenemos algunas funciones útiles
+
 def printerr(line):
     sys.stderr.write(u'%s\n' % line)
 

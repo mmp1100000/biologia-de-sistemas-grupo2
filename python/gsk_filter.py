@@ -9,6 +9,7 @@ min_inhibition_percentage = int(sys.argv[1])
 
 assay = new_client.assay
 
+# Filtramos los assay para quedarnos solo con los GSK
 assay_results = assay.filter(
     description__contains='GSK_PKIS',
     assay_type='B',
@@ -16,6 +17,7 @@ assay_results = assay.filter(
 
 printerr('Number of Assay Search Results: ' + str(len(assay_results)))
 
+# Vemos cuantos fármacos diferentes tenemos
 doc_list = list()
 for e in assay_results:
     doc_list.append(e['document_chembl_id'])
@@ -28,6 +30,7 @@ printerr('Filtering activities with doc id in previous query...')
 
 activity = new_client.activity
 
+# Hacemos otra búsqueda para obtener las interacciones
 interactions = activity.filter(
     document_chembl_id__in=doc_list,
     assay_type='B',

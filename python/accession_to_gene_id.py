@@ -2,7 +2,6 @@ from Bio import Entrez
 import fileinput
 
 from tqdm import tqdm
-from utils import suppress_stderr
 
 
 Entrez.email = 'sosa@uma.es'

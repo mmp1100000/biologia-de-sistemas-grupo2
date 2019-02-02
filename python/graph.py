@@ -13,20 +13,53 @@ conf_level = float(sys.argv[2])
 
 
 def nnet_graph(file, type, imageDim=20):
+
+    """
+
+        Esta función la vamos a utilizar para generar los diferentes gráficos de las redes. Para ello necesitamos un
+        archivo con una estructura concreta. Este debe tener:
+
+        Una columna para los farmacos y otra para los targets, ademas otra indicando si el target corresponde a cancer
+        de mama. Que utilizaremos para plotear de diferentes colores. Y el p-valor que nos servirá para filtrar las
+        interacciones.
+
+    :param file: ruta del fichero
+
+    :param type: selecciona el layout que prefieras:
+
+        - spring
+        - spectral
+        - reingold
+        - circular
+        - kawai
+        - random
+
+    :param imageDim: Si tenemos muchas interacciones es recomendable aumentar la dimensión de la imagen. (Pasar un número a
+    que hara que la imagen pase a ser del tamaño aXa)
+
+    :return: networkx graph
+    """
+
+    # Leemos con pandas el fichero csv
     data = pd.read_csv(file, sep="\t")
+
+    # Vemos el número de fármacos que tenemos
     unique_drugs = set(data['0'])
     total_number_of_tests = len(unique_drugs)
     df_node = pd.read_csv(file, sep="\t")
+
+    # Filtramos el archivo por el p-valor
     data['p_value'] = pd.to_numeric(data['p_value'])
     df_node['p_value'] = pd.to_numeric(df_node['p_value'])
-
     data = data[data['p_value'] < (1 - conf_level)/total_number_of_tests]
     df_node = df_node[df_node['p_value'] < (1 - conf_level)/total_number_of_tests]
 
     warnings.filterwarnings('ignore')
 
+    # Generamos un objeto gráfico donde añadiremos los nodos e interacciones
     G = nx.Graph(day="TodayNotTomorrow")
 
+    # Contamos cuanto aparecen los fármacos y los targets para ajustar después el tamaño de los nodos
     veces = []
     veces1 = []
     for l in set(data['0'].tolist()):
@@ -35,12 +68,12 @@ def nnet_graph(file, type, imageDim=20):
     for l in set(data['1'].tolist()):
         veces1.append(data['1'].tolist().count(l) + 10)
 
+    # Añadimos las interacciones
     df_edges = pd.DataFrame({
         'source': df_node['0'].tolist(),
         'target': df_node['1'].tolist(),
         'value': np.repeat(1, len(data['1'].tolist()))
     })
-    elements = list(set(data['0'])) + list(set(data['1']))
 
     #Aqui vamos a poner diferentes los colores
     vectorDif = data.sort_values('2', ascending=False).drop_duplicates('1', keep="first")
@@ -48,19 +81,24 @@ def nnet_graph(file, type, imageDim=20):
     groups = np.repeat(2, len(set(data['0'].values)),axis=0).tolist() + colors_differ.tolist()
 
     elements = list(set(data['0'])) + list(vectorDif['1'])
+
+    # Añadimos los diferentes nodos
     df_nodes = pd.DataFrame({'name': elements,
                              'group': groups,
                              'nodesize': veces + veces1
                              })
-    
+
+    # Añadimos los nodos y conexiones
     for index, row in df_nodes.iterrows():
         G.add_node(row['name'], group=row['group'], nodesize=row['nodesize'])
 
     for index, row in df_edges.iterrows():
         G.add_weighted_edges_from([(row['source'], row['target'], row['value'])])
 
+    # Seleccionamos los colores
     color_map = {0:'#DF0101' , 1: '#298A08', 2: '#0080FF'}
 
+    # Ajustamos algunos parámetros para el layout
     plt.figure(figsize=(imageDim, imageDim))
     options = {
         'edge_color': '#FFDEA2',
@@ -72,6 +110,8 @@ def nnet_graph(file, type, imageDim=20):
     colors = [color_map[G.node[node]['group']] for node in G]
     sizes = [G.node[node]['nodesize'] * 40 for node in G]
 
+
+    # Dependiendo del layout que queramos tendremos unos parámetros o otros
     if type == "spring":
         """
 
